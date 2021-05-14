@@ -1,8 +1,8 @@
 module Logic where
 
-data Op = And | Or | Impl | Eql deriving (Show)
+data BinaryOp = And | Or | Impl | Eql deriving (Show)
 
-data Logic = Binary {op :: Op, left :: Logic, right :: Logic}
+data Logic = Binary BinaryOp Logic Logic
            | Not Logic
            | Atom String
            | LogicT

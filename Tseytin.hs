@@ -20,9 +20,9 @@ tseytin :: Int -> Logic -> (Int, String, LogicCNF)
 tseytin n (Atom x) = (n, x, [])
 tseytin n (Not x) = (n_x + 1, nameAtom n_x, cnf_x ++ tseytinSingle (nameAtom n_x) (Not (Atom name_x)))
   where (n_x, name_x, cnf_x) = tseytin n x
-tseytin n formula = (n_r + 1, nameAtom n_r, cnf_l ++ cnf_r ++ tseytinSingle (nameAtom n_r) (Binary (op formula) (Atom name_l) (Atom name_r)))
-  where (n_l, name_l, cnf_l) = tseytin n (left formula)
-        (n_r, name_r, cnf_r) = tseytin n_l (right formula)
+tseytin n (Binary op left right) = (n_r + 1, nameAtom n_r, cnf_l ++ cnf_r ++ tseytinSingle (nameAtom n_r) (Binary op (Atom name_l) (Atom name_r)))
+  where (n_l, name_l, cnf_l) = tseytin n left
+        (n_r, name_r, cnf_r) = tseytin n_l right
 
 tseytinTransform :: Logic -> LogicCNF
 tseytinTransform f = [Pure name] : cnf
