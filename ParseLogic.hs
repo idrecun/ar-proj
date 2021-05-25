@@ -2,50 +2,31 @@ module ParseLogic where
 
 import Logic
 
-import Control.Monad
-import Text.ParserCombinators.Parsec
-import Text.ParserCombinators.Parsec.Expr
-import Text.ParserCombinators.Parsec.Language
-import qualified Text.ParserCombinators.Parsec.Token as Token
+import Data.Char
+import Text.ParserCombinators.ReadP
 
-{-
- - Lekser
- -}
-
-language = emptyDef { Token.identStart = letter,
-                      Token.identLetter = alphaNum,
-                      Token.reservedNames = ["true", "false"],
-                      Token.reservedOpNames = ["&", "|", "=>", "<=>", "~"] }
-
-lexer = Token.makeTokenParser language
-
--- Lekseme
-operator   = Token.reservedOp lexer
-constant   = Token.reserved lexer
-brackets   = Token.parens lexer
-identifier = Token.identifier lexer
+readEql   = skipSpaces >> string   "<=>" >>  return (Binary Eql)
+readImpl  = skipSpaces >> string    "=>" >>  return (Binary Impl)
+readOr    = skipSpaces >> char       '|' >>  return (Binary Or)
+readAnd   = skipSpaces >> char       '&' >>  return (Binary And)
+readNot   = skipSpaces >> char       '~' >>  return (Not)
+readT     = skipSpaces >> string  "true" >>  return LogicT
+readF     = skipSpaces >> string "false" >>  return LogicF
+readLBr   = skipSpaces >> char       '('
+readRBr   = skipSpaces >> char       ')'
+readAtom  = skipSpaces >> munch1 isAlpha >>= return <$> Atom
 
 
-{-
- - Parser
- -}
+parseEql  = chainr1 parseImpl readEql
+parseImpl = chainr1 parseOr   readImpl
+parseOr   = chainl1 parseAnd  readOr
+parseAnd  = chainl1 parseNot  readAnd
+parseNot  = (readNot <*> parseNot)
+        <++ parseBase
+parseBase = between readLBr readRBr parseEql
+        <++ readT
+        <++ readF
+        <++ readAtom
 
-operators = [ [Prefix (operator   "~" >> return Not)                      ],
-              [Infix  (operator   "&" >> return (Binary And))  AssocLeft  ],
-              [Infix  (operator   "|" >> return (Binary Or))   AssocLeft  ],
-              [Infix  (operator  "=>" >> return (Binary Impl)) AssocRight ],
-              [Infix  (operator "<=>" >> return (Binary Eql))  AssocRight ] ]
-
-atom =  brackets expr
-    <|> (constant "true" >> return LogicT)
-    <|> (constant "false" >> return LogicF)
-    <|> liftM Atom identifier
-
-expr :: Parser Logic
-expr = buildExpressionParser operators atom
-
-parser :: String -> Logic
-parser str = case result of
-              Left err -> error (show err)
-              Right l  -> l
-             where result = parse expr "" str
+parse :: String -> (Logic, String)
+parse str = last $ readP_to_S parseEql str

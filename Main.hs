@@ -3,6 +3,7 @@ import ParseLogic
 import Tseytin
 import Data.Map
 import Data.Set
+import System.IO
 
 type VarMap = Map String Int
 
@@ -28,6 +29,7 @@ dimacs formula = "c " ++ show (Data.Map.toList varmap) ++ "\ncnf " ++ show (leng
 main :: IO ()
 main = do
   str <- getLine
-  let formula = ParseLogic.parser str
-  let cnf = Tseytin.tseytinTransform formula
-  putStrLn (dimacs cnf)
+  let parsed = parse str
+  if snd parsed /= ""
+    then hPutStrLn stderr ("Error parsing " ++ (show $ snd parsed))
+    else putStr $ ("c " ++ (show $ fst parsed) ++ "\n" ++ (dimacs $ tseytinTransform $ fst parsed))
