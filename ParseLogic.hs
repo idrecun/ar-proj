@@ -16,7 +16,7 @@ readLBr   = skipSpaces >> char       '('
 readRBr   = skipSpaces >> char       ')'
 readAtom  = skipSpaces >> munch1 isAlpha >>= return <$> Atom
 
-
+parseF    = parseEql <* skipSpaces
 parseEql  = chainr1 parseImpl readEql
 parseImpl = chainr1 parseOr   readImpl
 parseOr   = chainl1 parseAnd  readOr
@@ -29,4 +29,4 @@ parseBase = between readLBr readRBr parseEql
         <++ readAtom
 
 parse :: String -> (Logic, String)
-parse str = last $ readP_to_S parseEql str
+parse str = last $ readP_to_S parseF str
