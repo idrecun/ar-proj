@@ -20,10 +20,10 @@ literalString :: VarMap -> LogicLiteral -> String
 literalString m (Pure v) = show (m ! v) ++ " "
 literalString m (Neg v)  = "-" ++ show (m ! v) ++ " "
 
-dimacs :: LogicCNF -> String
-dimacs formula = "c " ++ show (Data.Map.toList varmap) ++ "\ncnf " ++ show (length varmap) ++ " " ++ show (length formula) ++ "\n" ++ clauses
-  where varmap = getVarMap formula
-        clauses = concat (Prelude.map ((++ "0\n") . concat . (Prelude.map (literalString varmap))) formula)
+dimacs :: Logic -> LogicCNF -> String
+dimacs formula cnf = "c " ++ (show $ formula) ++ "\nc " ++ show (Data.Map.toList varmap) ++ "\ncnf " ++ show (length varmap) ++ " " ++ show (length cnf) ++ "\n" ++ clauses
+  where varmap = getVarMap cnf
+        clauses = concat (Prelude.map ((++ "0\n") . concat . (Prelude.map (literalString varmap))) cnf)
 
 
 main :: IO ()
@@ -32,4 +32,4 @@ main = do
   let parsed = parse str
   if snd parsed /= ""
     then hPutStrLn stderr ("Error parsing " ++ (show $ snd parsed))
-    else putStr $ ("c " ++ (show $ fst parsed) ++ "\n" ++ (dimacs $ tseytinTransform $ fst parsed))
+    else putStr $ dimacs (fst parsed) (tseytinTransform $ fst parsed)
