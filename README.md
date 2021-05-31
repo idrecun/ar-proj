@@ -49,8 +49,7 @@ input formula (and the ones artificially produced during the Tseytin
 transformation) to their DIMACS enumerated counterparts. The rest of the output
 contains the produced 3-CNF formula.
 
-
-### Example
+### Example 1
 
 `./tseyTiny`
 
@@ -74,6 +73,8 @@ p cnf 6 9
 -1 -6 0
 1 6 0
 ```
+
+### Example 2
 
 The input can be read from a file instead by redirecting the standard input.
 The same can be done for the output.
@@ -101,5 +102,34 @@ p cnf 5 8
 ```
 
 ## Tseytin transformation
+
+Suppose a propositional formula F is of the form F = A & B. Then F is
+satisfiable iff the set of formulas {S, S <=> A & B} is satisfiable. This can
+be rewritten (by simplifying the second formula to CNF) as {S, ~S & A, ~S & B,
+S & ~A & ~B} which is a 3-CNF. This can similarly be done for any (binary or
+unary) operator.
+
+The Tseytin transformation is then the procedure of recursively renaming the
+subformulas A and B in a similar manner and adding the respective equivalences
+to the 3-CNF result.
+
+For example, the formula `p & q => q | ~r` can be transformed in the following
+way
+```
+First transform the left side of => recursively
+  p & q -> {S1 <=> p & q}
+Then transform the right side
+  q | ~r
+  First transform the left side of | recursively (nothing to do, q is a variable)
+  Then transform the right side
+    ~r -> {S2 <=> ~r}
+  Now the formula is q | S2, so finally
+  q | S2 -> {S3 <=> q | S2}
+Now the formula is S1 => S3, so finally
+S1 => S3 -> {S4 <=> S1 => S3}
+
+The 3-CNF can be constructed from the following set of formulas {S4, S4 <=> S1
+=> S3, S3 <=> q | S2, S2 <=> ~r, S1 <=> p & q}
+```
 
 ## References
