@@ -28,4 +28,4 @@ tseytin n (Binary op left right) cnf = (n_r + 1, nameAtom n_r, clauses ++ cnf_l_
 
 tseytinTransform :: Logic -> LogicCNF
 tseytinTransform f = [Pure name] : cnf
-  where (_, name, cnf) = tseytin 0 (simplify f) []
+  where (_, name, cnf) = tseytin 1 (simplify f) []

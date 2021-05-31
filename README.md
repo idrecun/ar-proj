@@ -8,7 +8,7 @@ formula is linear in size with respect to the size of the input formula.
 
 ## Installation
 
-The tool can be built using the `ghc` Haskell compiler:
+The tool can be built using the `ghc` Haskell compiler
 
 `ghc --make Main.hs -o tseyTiny`
 
@@ -33,7 +33,7 @@ Formula -> Formula <=> Formula
          | Formula  |  Formula
          | Formula  &  Formula
          | ~ Formula
-		 | ( Formula )
+         | ( Formula )
          | Const
          | Variable
 
@@ -49,15 +49,49 @@ input formula (and the ones artificially produced during the Tseytin
 transformation) to their DIMACS enumerated counterparts. The rest of the output
 contains the produced 3-CNF formula.
 
+
+### Example
+
+`./tseyTiny`
+Input
+`q => p | ~r`
+Output
+```
+c (q => (p | ~r))
+c [("$1",1),("$2",2),("$3",3),("p",4),("q",5),("r",6)]
+p cnf 6 9
+3 0
+-3 -5 2 0
+5 3 0
+-2 3 0
+-2 4 1 0
+-4 2 0
+-1 2 0
+-1 -6 0
+1 6 0
+```
+
 The input can be read from a file instead by redirecting the standard input.
 The same can be done for the output.
 
-Example usage:
+`./tseyTiny < input.txt > output.cnf`
+input.txt
+`(q & true) | ~~r`
+output.cnf
+```
+c ((q & true) | ~~r)
+c [("$1",1),("$2",2),("$3",3),("q",4),("r",5)]
+p cnf 5 8
+3 0
+-3 4 2 0
+-4 3 0
+-2 3 0
+-2 -1 0
+2 1 0
+-1 -5 0
+1 5 0
+```
 
-`./tseyTiny <formula.txt >output.cnf`
-
-
-
-## The Tseytin transformation
+## Tseytin transformation
 
 ## References
