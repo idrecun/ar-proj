@@ -103,15 +103,15 @@ p cnf 5 8
 
 ## Tseytin transformation
 
-Suppose a propositional formula F is of the form F = A & B. Then F is
-satisfiable iff the set of formulas {S, S <=> A & B} is satisfiable. This can
-be rewritten (by simplifying the second formula to CNF) as {S, ~S & A, ~S & B,
-S & ~A & ~B} which is a 3-CNF. This can similarly be done for any (binary or
+Suppose a propositional formula `F` is of the form `F = A & B`. Then `F` is
+satisfiable iff the set of formulas `{S, S <=> A & B}` is satisfiable. This can
+be rewritten (by simplifying the second formula to CNF) as `{S, ~S & A, ~S & B,
+S & ~A & ~B}` which is a 3-CNF. This can similarly be done for any (binary or
 unary) operator.
 
 The Tseytin transformation is then the procedure of recursively renaming the
-subformulas A and B in a similar manner and adding the respective equivalences
-to the 3-CNF result.
+subformulas `A` and `B` in a similar manner and adding the respective
+equivalences to the 3-CNF result.
 
 For example, the formula `p & q => q | ~r` can be transformed in the following
 way
