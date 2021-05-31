@@ -21,7 +21,7 @@ literalString m (Pure v) = show (m ! v) ++ " "
 literalString m (Neg v)  = "-" ++ show (m ! v) ++ " "
 
 dimacs :: Logic -> LogicCNF -> String
-dimacs formula cnf = "c " ++ (show $ formula) ++ "\nc " ++ show (Data.Map.toList varmap) ++ "\ncnf " ++ show (length varmap) ++ " " ++ show (length cnf) ++ "\n" ++ clauses
+dimacs formula cnf = "c " ++ (show $ formula) ++ "\nc " ++ show (Data.Map.toList varmap) ++ "\np cnf " ++ show (length varmap) ++ " " ++ show (length cnf) ++ "\n" ++ clauses
   where varmap = getVarMap cnf
         clauses = concat (Prelude.map ((++ "0\n") . concat . (Prelude.map (literalString varmap))) cnf)
 
