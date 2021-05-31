@@ -53,9 +53,13 @@ contains the produced 3-CNF formula.
 ### Example
 
 `./tseyTiny`
+
 Input
+
 `q => p | ~r`
+
 Output
+
 ```
 c (q => (p | ~r))
 c [("$1",1),("$2",2),("$3",3),("p",4),("q",5),("r",6)]
@@ -75,9 +79,13 @@ The input can be read from a file instead by redirecting the standard input.
 The same can be done for the output.
 
 `./tseyTiny < input.txt > output.cnf`
+
 input.txt
+
 `(q & true) | ~~r`
+
 output.cnf
+
 ```
 c ((q & true) | ~~r)
 c [("$1",1),("$2",2),("$3",3),("q",4),("r",5)]
