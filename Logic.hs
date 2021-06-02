@@ -14,9 +14,12 @@ data Logic = Binary BinaryOp Logic Logic
            | LogicT
            | LogicF
 
+showAccumulate :: String -> Logic -> String
+showAccumulate res (Binary op l r) = "(" ++ showAccumulate (" " ++ show op ++ " " ++ (showAccumulate (')' : res) r)) l
+showAccumulate res (Not f)  = '~' : (showAccumulate res f)
+showAccumulate res LogicT   = "true" ++ res
+showAccumulate res LogicF   = "false" ++ res
+showAccumulate res (Atom v) = v ++ res
+
 instance Show Logic where
-  show (Binary op l r) = "(" ++ show l ++ " " ++ show op ++ " " ++ show r ++ ")"
-  show (Not f) = '~' : (show f)
-  show LogicT  = "true"
-  show LogicF  = "false"
-  show (Atom v)  = v
+  show = showAccumulate ""
