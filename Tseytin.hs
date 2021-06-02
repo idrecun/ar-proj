@@ -15,7 +15,7 @@ tseytinSingle s (Binary Or (Atom a) (Atom b)) = [[Neg s, Pure a, Pure b], [Neg a
 tseytinSingle s (Binary Impl (Atom a) (Atom b)) = [[Neg s, Neg a, Pure b], [Pure a, Pure s], [Neg b, Pure s]]
 tseytinSingle s (Binary Eql (Atom a) (Atom b)) = [[Neg s, Neg a, Pure b], [Neg s, Neg b, Pure a], [Pure s, Pure a, Pure b], [Pure s, Neg a, Neg b]]
 tseytinSingle s (Not (Atom a)) = [[Neg s, Neg a], [Pure s, Pure a]]
-tseytinSingle s LogicT = []
+tseytinSingle s LogicT = [[Pure s]]
 tseytinSingle s LogicF = [[Neg s]]
 
 tseytin :: Int -> Logic -> LogicCNF -> (Int, String, LogicCNF)
@@ -32,4 +32,4 @@ tseytin n constF cnf = (n + 1, nameAtom n, clauses ++ cnf)
 
 tseytinTransform :: Logic -> LogicCNF
 tseytinTransform f = [Pure name] : cnf
-  where (_, name, cnf) = tseytin 1 (simplify f) []
+  where (_, name, cnf) = tseytin 1 f []
