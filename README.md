@@ -112,7 +112,7 @@ for any (binary or unary) operator.
 When `A` and `B` are subformulas instead of variables, the Tseytin
 transformation is the procedure of recursively renaming subformulas `A` and `B`
 by introducing the previously mentioned equivalences and adding those
-equivalences to the 3-CNF result.
+equivalences to the resulting set of formulas.
 
 For example, the formula `p & q => q | ~r` can be transformed in the following
 way
@@ -133,4 +133,7 @@ The 3-CNF can be constructed from the following set of formulas
 {S4, S4 <=> S1 => S3, S3 <=> q | S2, S2 <=> ~r, S1 <=> p & q}
 ```
 
-## References
+Clearly, the size of the resulting set of formulas is linear with respect to
+the size of the input formula. This bypasses the exponential bound of
+algebraically transforming the input formula to an equivalent CNF, thus
+allowing for a practical usage of SAT solvers.
